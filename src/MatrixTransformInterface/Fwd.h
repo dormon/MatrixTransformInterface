@@ -18,15 +18,6 @@ using NodeID = std::size_t;
  */
 using NodeIndex = size_t;
 
-/**
- * @brief Transformation matrix 4x4
- * Order of elements:
- * |0 4 8 C|
- * |1 5 9 D|
- * |2 6 A E|
- * |3 7 B F|
- */
-using Matrix = std::array<float, 16>;
 
 using Vec3 = std::array<float, 3>;
 
@@ -39,7 +30,9 @@ class Buffer;
 class OutputAttribute;
 class UserIDsOutputAttribute;
 
-using OutputAttributePointer = std::shared_ptr<OutputAttribute>;
+using NodeAttributePointer   = std::unique_ptr<NodeAttribute>;
+using NodeAttributes         = std::vector<NodeAttributePointer>;
+using OutputAttributePointer = std::unique_ptr<OutputAttribute>;
 using OutputAttributes       = std::vector<OutputAttributePointer>;
 
 using BufferPointer = std::shared_ptr<Buffer>;

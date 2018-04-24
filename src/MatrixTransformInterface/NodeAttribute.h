@@ -10,10 +10,20 @@ namespace matrixTransform {
  */
 class NodeAttribute {
   public:
+    enum Type{
+      MATRIX ,
+      OUTPUT ,
+      USER_ID,
+      AABB   ,
+    };
+    NodeAttribute(Type const&t):type(t){}
+    virtual ~NodeAttribute(){};
+    Type getType()const{return type;}
+  protected:
+    Type type;
 };
 
-using NodeAttributePointer = std::shared_ptr<NodeAttribute>;
-using NodeAttributes       = std::vector<NodeAttributePointer>;
+/*
 using UserID               = uint32_t;
 using UserIDs              = std::vector<UserID>;
 
@@ -26,5 +36,6 @@ class UserIDsNodeAttribute : public NodeAttribute {
   public:
   UserIDs userIds = {};
 };
+*/
 
 };  // namespace matrixTransform

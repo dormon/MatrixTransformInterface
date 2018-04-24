@@ -3,49 +3,18 @@
 #include <array>
 #include <cstdint>
 #include <memory>
+#include <set>
 #include <vector>
 
+#include <MatrixTransformInterface/ComputeParameter.h>
 #include <MatrixTransformInterface/Fwd.h>
 #include <MatrixTransformInterface/NodeAttribute.h>
 
 namespace matrixTransform {
 
 /**
- * @brief Node Data
- * Node data has to contain transformation matrix and isOutput flag.
- * Node can also contain additional attributes (frustum culling aabb, user ids,
- * ...)
- */
-class NodeData {
-  public:
-  Matrix         data;                ///< transformation matrix
-  bool           isOutput   = false;  ///< is output of this node needed?
-  NodeAttributes attributes = {};     ///< additional node attributes
-};
-
-class Buffer {
-  public:
-  virtual ~Buffer() {}
-};
-
-class OutputAttribute {};
-
-class UserIDsOutputAttribute : public OutputAttribute {
-  public:
-  BufferPointer offsets;  ///< which matrices are associated with which userId
-  BufferPointer userIds;  ///< unique userIds of nodes that passed the condition
-  BufferPointer nofIds;   ///< number of unique userIds
-};
-
-class Output {
-  public:
-  std::shared_ptr<Buffer> matrices;
-  OutputAttributes        attributes;
-};
-
-/**
  * @brief This class represents interface of GPU based scene graph with
- * transformations Classes that implement this interface will have custom
+ * transformations. Classes that implement this interface will have custom
  * constructors. These constructors should provide OpenCL context and Device or
  * OpenGL context, or ...
  *
@@ -55,6 +24,25 @@ class Output {
  */
 class GPUTransform {
   public:
+  enum Feature {
+    USE_FRUSTUM_CULLING,  ///< activate frustum culling
+    /**
+     * @brief Each node can contain list of user ids (uint32_t) identifying user
+     * data (meshes, ...)
+     */
+    USE_USER_IDS,
+    // TO BE EXTENDED
+  };
+  /**
+   * @brief Set of features
+   */
+  using Features = std::set<Feature>;
+  /**
+   * @brief Constructor 
+   *
+   * @param features feature set
+   */
+  GPUTransform(Features const& features = {});
   /**
    * @brief Destructor
    */
@@ -168,7 +156,16 @@ class GPUTransform {
    * @return node's data
    */
   virtual NodeData const& getNodeData(NodeID node) const = 0;
-
+  /**
+   * @brief This function sets global scene parameters needed by computation.
+   * One of the compute parameter will be view matrix for frustum culling.
+   *
+   * @param type type of compute parameter
+   * @param data compute parameter data
+   */
+  virtual void setComputeParameter(
+      ComputeParameter::Type const&            type,
+      std::shared_ptr<ComputeParameter> const& data);
   /**
    * @brief This function uploads all changes to GPU.
    *
@@ -190,12 +187,12 @@ class GPUTransform {
   virtual void finish() = 0;
 
   /**
-   * @brief Root node is virtual and in fact does not exists.
-   * Root node does not contain any data.
+   * @brief The master root node is virtual node.
+   * The master root node does not contain any data.
    * It exists only for convinience.
    * If your application requires multiple roots, all of them must be children
-   * of root node. Children of the root node are traversed during computation.
-   * The root node does not have
+   * of the master root node. Children of the master root node are traversed
+   * during computation.
    */
   NodeID static const masterRootNode = 0;
 };
