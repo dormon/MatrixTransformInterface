@@ -1,6 +1,11 @@
 # MatrixTransformInterface
 Interface for matrix transformation computed on GPU
 
+Main file: MatrixTransformInterface/MatrixTransformInterface.h
+
+Everything is located inside namespace matrixTransform.
+
+
 /**
  * @brief Output of GPUTransform computation.
  * Matrices contains all node matrices that satisfy this condition:

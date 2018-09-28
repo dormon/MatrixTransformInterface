@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @brief This file contains matrix transform interface.
+ * OpenCL/DirectX/OpenGL specific classes should implement this interface.
+ *
+ * @author Tomáš Milet, imilet@fit.vutbr.cz
+ */
+
 #pragma once
 
 #include <array>
@@ -11,6 +19,17 @@
 #include <MatrixTransformInterface/NodeAttribute.h>
 
 namespace matrixTransform {
+
+/**
+ * @brief unique node identifier
+ */
+using NodeID = std::size_t;
+
+/**
+ * @brief Childred and parents are stored in ordered lists
+ * NodeIndex is index to these lists
+ */
+using NodeIndex = std::size_t;
 
 /**
  * @brief This class represents interface of GPU based scene graph with

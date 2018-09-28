@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @brief This file contains forward declarations.
+ *
+ * @author Tomáš Milet, imilet@fit.vutbr.cz
+ */
 #pragma once
 
 #include <array>
@@ -7,34 +13,22 @@
 
 namespace matrixTransform {
 
-/**
- * @brief unique node identifier
- */
-using NodeID = std::size_t;
-
-/**
- * @brief Childred and parents are stored in ordered lists
- * NodeIndex is index to these lists
- */
-using NodeIndex = size_t;
-
-
-using Vec3 = std::array<float, 3>;
+class NodeData;
 
 class NodeAttribute;
 class FrustumCullingNodeAttribute;
 class UserIDsNodeAttribute;
 
-class NodeData;
-class Buffer;
 class OutputAttribute;
+class MatricesOutputAttribute;
 class UserIDsOutputAttribute;
 
-using NodeAttributePointer   = std::unique_ptr<NodeAttribute>;
-using NodeAttributes         = std::vector<NodeAttributePointer>;
-using OutputAttributePointer = std::unique_ptr<OutputAttribute>;
-using OutputAttributes       = std::vector<OutputAttributePointer>;
+class ComputeParameter;
+class CPUCamera;
+class GPUCamera;
 
-using BufferPointer = std::shared_ptr<Buffer>;
+class Buffer;
+
+class GPUTransform;
 
 }  // namespace matrixTransform
